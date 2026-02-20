@@ -1,0 +1,9 @@
+opencv-python
+pandas
+matplotlib
+seaborn
+albumentations
+scikit-learn
+jupyter
+Pillow
+roboflow
