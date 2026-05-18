@@ -1,0 +1,247 @@
+<Window x:Class="YoloWpfDetector.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="YOLO Road Object Detector"
+        Height="760"
+        MinHeight="650"
+        Width="1180"
+        MinWidth="980"
+        WindowState="Maximized"
+        Background="#0E141B"
+        Closing="Window_Closing">
+    <Window.Resources>
+        <Style x:Key="FieldLabelStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#9FB0C0" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+        <Style x:Key="ControlTextBoxStyle" TargetType="TextBox">
+            <Setter Property="Height" Value="38" />
+            <Setter Property="Padding" Value="10,7" />
+            <Setter Property="Foreground" Value="#F3F7FA" />
+            <Setter Property="Background" Value="#0D131A" />
+            <Setter Property="BorderBrush" Value="#314356" />
+            <Setter Property="CaretBrush" Value="#F3F7FA" />
+        </Style>
+        <Style x:Key="ControlComboBoxStyle" TargetType="ComboBox">
+            <Setter Property="Height" Value="38" />
+            <Setter Property="Foreground" Value="#111820" />
+            <Setter Property="Background" Value="#F3F7FA" />
+            <Setter Property="BorderBrush" Value="#314356" />
+        </Style>
+        <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+            <Setter Property="Height" Value="42" />
+            <Setter Property="Foreground" Value="#061018" />
+            <Setter Property="Background" Value="#39D98A" />
+            <Setter Property="BorderBrush" Value="#39D98A" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+        <Style x:Key="SecondaryButtonStyle" TargetType="Button">
+            <Setter Property="Height" Value="42" />
+            <Setter Property="Foreground" Value="#F3F7FA" />
+            <Setter Property="Background" Value="#1D2A36" />
+            <Setter Property="BorderBrush" Value="#314356" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+        <Style TargetType="ListBox">
+            <Setter Property="Foreground" Value="#D7E4EC" />
+            <Setter Property="Background" Value="#0D131A" />
+            <Setter Property="BorderBrush" Value="#314356" />
+        </Style>
+        <Style TargetType="ListBoxItem">
+            <Setter Property="Padding" Value="8,4" />
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="330" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0"
+                Background="#121B24"
+                BorderBrush="#263647"
+                BorderThickness="0,0,1,0"
+                Padding="24">
+            <StackPanel>
+                <TextBlock Text="YOLO Stream"
+                           FontSize="28"
+                           FontWeight="Bold"
+                           Foreground="#F3F7FA" />
+                <TextBlock Text="Camera by default, MP4 when you need replay."
+                           Margin="0,6,0,28"
+                           TextWrapping="Wrap"
+                           Foreground="#9FB0C0" />
+
+                <TextBlock Text="Source"
+                           Style="{StaticResource FieldLabelStyle}" />
+                <ComboBox x:Name="SourceComboBox"
+                          SelectionChanged="SourceComboBox_SelectionChanged"
+                          SelectedIndex="0"
+                          Style="{StaticResource ControlComboBoxStyle}">
+                    <ComboBoxItem Content="Local Camera" />
+                    <ComboBoxItem Content="MP4 Video" />
+                </ComboBox>
+
+                <TextBlock Text="Camera Index"
+                           Margin="0,18,0,6"
+                           Style="{StaticResource FieldLabelStyle}" />
+                <TextBox x:Name="CameraIndexTextBox"
+                         Text="0"
+                         Style="{StaticResource ControlTextBoxStyle}" />
+
+                <TextBlock Text="MP4 Video"
+                           Margin="0,18,0,6"
+                           Style="{StaticResource FieldLabelStyle}" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="86" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox x:Name="VideoPathTextBox"
+                             IsEnabled="False"
+                             Style="{StaticResource ControlTextBoxStyle}" />
+                    <Button Grid.Column="1"
+                            x:Name="BrowseButton"
+                            IsEnabled="False"
+                            Margin="8,0,0,0"
+                            Content="Browse"
+                            Click="BrowseButton_Click"
+                            Style="{StaticResource SecondaryButtonStyle}" />
+                </Grid>
+
+                <TextBlock Text="Detection FPS Limit"
+                           Margin="0,18,0,6"
+                           Style="{StaticResource FieldLabelStyle}" />
+                <ComboBox x:Name="FpsComboBox"
+                          SelectedIndex="0"
+                          Style="{StaticResource ControlComboBoxStyle}">
+                    <ComboBoxItem Content="Max available" Tag="0" />
+                    <ComboBoxItem Content="5" />
+                    <ComboBoxItem Content="10" />
+                    <ComboBoxItem Content="15" />
+                    <ComboBoxItem Content="20" />
+                    <ComboBoxItem Content="30" />
+                    <ComboBoxItem Content="45" />
+                    <ComboBoxItem Content="60" />
+                    <ComboBoxItem Content="90" />
+                    <ComboBoxItem Content="120" />
+                </ComboBox>
+
+                <Grid Margin="0,18,0,6">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Confidence"
+                               Style="{StaticResource FieldLabelStyle}" />
+                    <TextBlock Grid.Column="1"
+                               x:Name="ConfidenceValueTextBlock"
+                               Text="25%"
+                               Foreground="#D7E4EC"
+                               FontWeight="SemiBold" />
+                </Grid>
+                <Slider x:Name="ConfidenceSlider"
+                        Minimum="0.05"
+                        Maximum="0.95"
+                        Value="0.25"
+                        TickFrequency="0.05"
+                        IsSnapToTickEnabled="True"
+                        ValueChanged="ConfidenceSlider_ValueChanged" />
+
+                <TextBlock Text="Model"
+                           Margin="0,18,0,6"
+                           Style="{StaticResource FieldLabelStyle}" />
+                <ComboBox x:Name="ModelComboBox"
+                          SelectionChanged="ModelComboBox_SelectionChanged"
+                          DisplayMemberPath="Name"
+                          Style="{StaticResource ControlComboBoxStyle}" />
+                <TextBlock x:Name="ModelPathTextBlock"
+                           Margin="0,6,0,0"
+                           TextWrapping="Wrap"
+                           Foreground="#D7E4EC"
+                           FontSize="12" />
+
+                <TextBlock x:Name="ClassesHeaderTextBlock"
+                           Text="Classes"
+                           Margin="0,18,0,6"
+                           Style="{StaticResource FieldLabelStyle}" />
+                <ListBox x:Name="ModelClassesListBox"
+                         Height="112">
+                    <ListBoxItem Content="Loading model classes..." />
+                </ListBox>
+
+                <StackPanel Orientation="Horizontal"
+                            Margin="0,28,0,0">
+                    <Button x:Name="StartButton"
+                            Width="132"
+                            Content="Start"
+                            Click="StartButton_Click"
+                            Style="{StaticResource PrimaryButtonStyle}" />
+                    <Button x:Name="StopButton"
+                            Width="132"
+                            Margin="12,0,0,0"
+                            Content="Stop"
+                            IsEnabled="False"
+                            Click="StopButton_Click"
+                            Style="{StaticResource SecondaryButtonStyle}" />
+                </StackPanel>
+
+                <Border Margin="0,28,0,0"
+                        Padding="14"
+                        Background="#0D131A"
+                        BorderBrush="#263647"
+                        BorderThickness="1"
+                        CornerRadius="14">
+                    <StackPanel>
+                        <TextBlock Text="Setup note"
+                                   Foreground="#F3F7FA"
+                                   FontWeight="SemiBold" />
+                        <TextBlock Text="If first run reports missing Python packages, install requirements.txt in this project folder."
+                                   Margin="0,6,0,0"
+                                   Foreground="#9FB0C0"
+                                   TextWrapping="Wrap" />
+                        <Button x:Name="RequirementsButton"
+                                Margin="0,12,0,0"
+                                Content="Check / Install Requirements"
+                                Click="RequirementsButton_Click"
+                                Style="{StaticResource SecondaryButtonStyle}" />
+                    </StackPanel>
+                </Border>
+
+                <TextBlock x:Name="StatusTextBlock"
+                           Margin="0,24,0,0"
+                           Text="Ready. Local camera is selected."
+                           Foreground="#9FB0C0"
+                           TextWrapping="Wrap" />
+            </StackPanel>
+        </Border>
+
+        <Grid Grid.Column="1"
+              Margin="24">
+            <Border Background="#05080C"
+                    BorderBrush="#263647"
+                    BorderThickness="1"
+                    CornerRadius="22"
+                    ClipToBounds="True">
+                <Grid>
+                    <Image x:Name="VideoImage"
+                           Stretch="Uniform"
+                           SnapsToDevicePixels="True" />
+                    <TextBlock x:Name="PlaceholderTextBlock"
+                               Text="Press Start to open the local camera."
+                               Foreground="#6F8292"
+                               FontSize="20"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center" />
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>
